@@ -173,7 +173,7 @@ const BrowseProduce = () => {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <span className="text-2xl font-bold text-gray-900">
-                  ${produce.pricePerUnit.toFixed(2)}
+                 ₹{produce.pricePerUnit.toFixed(2)}
                 </span>
                 <span className="text-sm text-gray-500 ml-1">
                   per {produce.unit}

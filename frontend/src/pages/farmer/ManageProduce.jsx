@@ -127,7 +127,7 @@ const ManageProduce = () => {
                     {produce.quantity} {produce.unit}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ${produce.pricePerUnit.toFixed(2)}
+                    ₹{produce.pricePerUnit.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {new Date(produce.availableDate).toLocaleDateString()}

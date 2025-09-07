@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Calendar, Package, DollarSign, FileText } from 'lucide-react';
+import { Calendar, Package, DollarSign, FileText, IndianRupee } from 'lucide-react';
 import { produceService } from '../../services/produceService';
 
 const AddProduce = () => {
@@ -152,10 +152,10 @@ const AddProduce = () => {
               htmlFor="pricePerUnit"
               className="block text-sm font-medium text-gray-700"
             >
-              Price per Unit ($)
+              Price per Unit (₹)
             </label>
             <div className="mt-1 relative">
-              <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 {...register('pricePerUnit', {
                   required: 'Price is required',
