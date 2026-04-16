@@ -1,9 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18'
+        }
+    }
 
     stages {
-
-       
 
         stage('Install Backend') {
             steps {
@@ -18,11 +20,11 @@ pipeline {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
                     cd backend
-                    npx sonar-scanner
+                    npm install -g sonar-scanner
+                    sonar-scanner
                     '''
                 }
             }
         }
     }
 }
-
