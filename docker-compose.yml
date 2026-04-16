@@ -1,0 +1,14 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=your_uri_here
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+
