@@ -3,11 +3,7 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/sowbagya-049/Farmer-system-devops.git'
-            }
-        }
+       
 
         stage('Install Backend') {
             steps {
