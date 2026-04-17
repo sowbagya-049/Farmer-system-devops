@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
       - name: app
-        image: sowbagya15/smart-farmer-backend
+        image: smart-farmer-backend:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 5000
         volumeMounts:

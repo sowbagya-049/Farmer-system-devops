@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -23,7 +24,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['farmer', 'buyer', 'admin'],
+    enum: ['farmer', 'buyer', 'admin', 'user'],
     required: [true, 'Role is required']
   },
   phone: {
@@ -64,9 +65,9 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Compare password method
-userSchema.methods.comparePassword = async function(candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
+
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
 // Remove password from JSON output

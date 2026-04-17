@@ -8,11 +8,11 @@ module.exports = defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://192.168.49.2:30383',
         changeOrigin: true,
       },
       '/socket.io': {
-        target: 'http://localhost:5000',
+        target: 'http://192.168.49.2:30383',
         changeOrigin: true,
         ws: true,
       },
