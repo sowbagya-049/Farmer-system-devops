@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         SONAR_HOST_URL = 'http://sonarqube:9000'
-        SONAR_TOKEN = 'sqa_ece832660528dce776c0044005176210d58ab2f6'
+        SONAR_TOKEN = 'sqa_72d6704d9a9e761b2749f3fb9f3d6813964af4bb'
     }
 
     stages {
