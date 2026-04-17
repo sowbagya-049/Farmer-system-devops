@@ -29,7 +29,7 @@ pipeline {
 
                     wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
 
-                    unzip -q sonar-scanner-cli-*.zip
+                    unzip -oq sonar-scanner-cli-*.zip
 
                     cd sonar-scanner-*/bin
 
@@ -46,3 +46,4 @@ pipeline {
         }
     }
 }
+	
