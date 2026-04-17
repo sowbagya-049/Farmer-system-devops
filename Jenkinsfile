@@ -25,10 +25,17 @@ pipeline {
             steps {
                 dir('backend') {
                     sh '''
-                    npm install sonar-scanner --save-dev
-                    npx sonar-scanner \
+                    apt update && apt install -y unzip wget
+
+                    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+
+                    unzip sonar-scanner-cli-*.zip
+
+                    cd sonar-scanner-*/bin
+
+                    ./sonar-scanner \
                     -Dsonar.projectKey=smart-farmer-devops \
-                    -Dsonar.sources=. \
+                    -Dsonar.sources=../../ \
                     -Dsonar.host.url=$SONAR_HOST_URL \
                     -Dsonar.login=$SONAR_TOKEN
                     '''
@@ -38,3 +45,4 @@ pipeline {
 
     }
 }
+
