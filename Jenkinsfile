@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONAR_TOKEN = 'sqa_72d6704d9a9e761b2749f3fb9f3d6813964af4bb'
+        SONAR_TOKEN = 'sqa_e1b3561204b6480e750e03dbfc389792f7087093'
     }
 
     stages {
