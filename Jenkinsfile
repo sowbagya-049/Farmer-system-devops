@@ -35,7 +35,7 @@ pipeline {
                 sleep 10
 
                 echo "📊 Checking Quality Gate..."
-                STATUS=$(curl -s -u $SONAR_TOKEN: http://sonarqube:9000/api/qualitygates/project_status?projectKey=smart-farmer-devops | grep -o '"status":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+                STATUS=$(curl -s -u $SONAR_TOKEN: http://sonarqube:9000/api/qualitygates/project_status?projectKey=smart-farmer-devops | grep -o '"status":"[^"]*"' | head -n 1 | cut -d':' -f2 | tr -d '"')
 
                 echo "Quality Gate Status: $STATUS"
 
@@ -50,4 +50,3 @@ pipeline {
         }
     }
 }
-
