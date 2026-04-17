@@ -9,7 +9,7 @@ pipeline {
 
     stages {
 
-        stage('Run Build + Sonar Scan in Docker') {
+        stage('Build + Sonar Scan') {
             steps {
                 sh '''
                 docker run --rm \
@@ -20,9 +20,8 @@ pipeline {
                 set -e
 
                 echo '📦 Installing dependencies...'
-                cd /app/backend
+                cd /app
                 npm install
-                cd ..
 
                 echo '🛠 Installing tools...'
                 apt update && apt install -y unzip wget curl
@@ -35,16 +34,16 @@ pipeline {
                 ./sonar-scanner-*/bin/sonar-scanner \
                 -Dsonar.projectKey=$PROJECT_KEY \
                 -Dsonar.projectBaseDir=/app \
-                -Dsonar.sources=backend \
+                -Dsonar.sources=. \
                 -Dsonar.host.url=$SONAR_HOST_URL \
                 -Dsonar.token=$SONAR_TOKEN
 
-                echo '⏳ Waiting for Sonar analysis to be processed...'
+                echo '⏳ Waiting for analysis...'
                 sleep 10
 
                 echo '📊 Checking Quality Gate...'
                 STATUS=\$(curl -s -u $SONAR_TOKEN: \
-                "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$PROJECT_KEY" \
+                $SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$PROJECT_KEY \
                 | grep -o '"status":"[^"]*"' | cut -d':' -f2 | tr -d '"')
 
                 echo "Quality Gate Status: \$STATUS"
@@ -61,4 +60,3 @@ pipeline {
         }
     }
 }
-
