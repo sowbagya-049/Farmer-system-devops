@@ -13,7 +13,7 @@ pipeline {
                 docker run --rm \
                 --network=devops-net \
                 -v $(pwd):/app \
-                -w /app/backend \
+                -w /app \
                 node:18 bash -c "
 
                 apt update && apt install -y unzip wget
@@ -30,7 +30,7 @@ pipeline {
 
                 ./sonar-scanner \
                 -Dsonar.projectKey=smart-farmer-devops \
-                -Dsonar.sources=. \
+                -Dsonar.sources=backend \
                 -Dsonar.host.url=http://sonarqube:9000 \
                 -Dsonar.login=$SONAR_TOKEN
                 "
