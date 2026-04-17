@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-farmer
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: smart-farmer
+  template:
+    metadata:
+      labels:
+        app: smart-farmer
+    spec:
+      containers:
+      - name: app
+        image: sowbagya15/smart-farmer-backend
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - mountPath: /app/data
+          name: storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: smart-pvc
