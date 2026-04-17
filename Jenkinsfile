@@ -3,11 +3,13 @@ pipeline {
 
     environment {
         SONAR_TOKEN = 'sqa_e1b3561204b6480e750e03dbfc389792f7087093'
+        SONAR_HOST_URL = 'http://sonarqube:9000'
+        PROJECT_KEY = 'smart-farmer-devops'
     }
 
     stages {
 
-        stage('Run in Docker') {
+        stage('Run Build + Sonar Scan in Docker') {
             steps {
                 sh '''
                 docker run --rm \
@@ -15,31 +17,48 @@ pipeline {
                 -v $(pwd):/app \
                 node:18 bash -c "
 
-                # Move to project root
-                cd /app
+                set -e
 
-                # Install backend dependencies correctly
-                cd backend
+                echo '📦 Installing dependencies...'
+                cd /app/backend
                 npm install
                 cd ..
 
-                # Install required tools
-                apt update && apt install -y unzip wget
+                echo '🛠 Installing tools...'
+                apt update && apt install -y unzip wget curl
 
-                # Download Sonar Scanner
+                echo '⬇ Downloading Sonar Scanner...'
                 wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
                 unzip -oq sonar-scanner-cli-*.zip
 
-                # Run Sonar Scanner from PROJECT ROOT (IMPORTANT)
+                echo '🔍 Running SonarQube Scan...'
                 ./sonar-scanner-*/bin/sonar-scanner \
-                -Dsonar.projectKey=smart-farmer-devops \
+                -Dsonar.projectKey=$PROJECT_KEY \
                 -Dsonar.projectBaseDir=/app \
                 -Dsonar.sources=backend \
-                -Dsonar.host.url=http://sonarqube:9000 \
+                -Dsonar.host.url=$SONAR_HOST_URL \
                 -Dsonar.token=$SONAR_TOKEN
+
+                echo '⏳ Waiting for Sonar analysis to be processed...'
+                sleep 10
+
+                echo '📊 Checking Quality Gate...'
+                STATUS=\$(curl -s -u $SONAR_TOKEN: \
+                "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$PROJECT_KEY" \
+                | grep -o '"status":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+
+                echo "Quality Gate Status: \$STATUS"
+
+                if [ "\$STATUS" != "OK" ]; then
+                    echo '❌ Quality Gate FAILED'
+                    exit 1
+                else
+                    echo '✅ Quality Gate PASSED'
+                fi
                 "
                 '''
             }
         }
     }
 }
+
