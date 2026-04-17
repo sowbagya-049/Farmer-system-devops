@@ -2,9 +2,9 @@ pipeline {
     agent {
         docker {
             image 'node:18'
-            args '-u root:root'
-        }
-    }
+            args '--network=devops-net -u root:root'
+         } 
+     }
 
     environment {
         SONAR_HOST_URL = 'http://sonarqube:9000'
