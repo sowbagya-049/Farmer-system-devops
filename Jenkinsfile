@@ -10,49 +10,44 @@ pipeline {
         stage('Build + Sonar Scan') {
             steps {
                 sh '''
-                docker run --rm \
-                --network=devops-net \
-                -v $(pwd):/app \
-                node:18 bash -c "
-
                 set -e
 
-                echo '📦 Installing backend dependencies...'
-                cd /app/backend
+                echo "📦 Installing backend dependencies..."
+                cd backend
                 npm install
+                cd ..
 
-                echo '🛠 Installing tools...'
+                echo "🛠 Installing tools..."
                 apt update && apt install -y unzip wget curl
 
-                echo '⬇ Downloading Sonar Scanner...'
+                echo "⬇ Downloading Sonar Scanner..."
                 wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
                 unzip -oq sonar-scanner-cli-*.zip
 
-                echo '🔍 Running SonarQube Scan...'
-                cd /app
+                echo "🔍 Running SonarQube Scan..."
                 ./sonar-scanner-*/bin/sonar-scanner \
                 -Dsonar.projectKey=smart-farmer-devops \
                 -Dsonar.sources=backend \
                 -Dsonar.host.url=http://sonarqube:9000 \
                 -Dsonar.token=$SONAR_TOKEN
 
-                echo '⏳ Waiting for analysis...'
+                echo "⏳ Waiting for analysis..."
                 sleep 10
 
-                echo '📊 Checking Quality Gate...'
-                STATUS=\$(curl -s -u $SONAR_TOKEN: http://sonarqube:9000/api/qualitygates/project_status?projectKey=smart-farmer-devops | grep -o '"status":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+                echo "📊 Checking Quality Gate..."
+                STATUS=$(curl -s -u $SONAR_TOKEN: http://sonarqube:9000/api/qualitygates/project_status?projectKey=smart-farmer-devops | grep -o '"status":"[^"]*"' | cut -d':' -f2 | tr -d '"')
 
-                echo "Quality Gate Status: \$STATUS"
+                echo "Quality Gate Status: $STATUS"
 
-                if [ "\$STATUS" != "OK" ]; then
-                    echo '❌ Quality Gate FAILED'
+                if [ "$STATUS" != "OK" ]; then
+                    echo "❌ Quality Gate FAILED"
                     exit 1
                 else
-                    echo '✅ Quality Gate PASSED'
+                    echo "✅ Quality Gate PASSED"
                 fi
-                "
                 '''
             }
         }
     }
 }
+
