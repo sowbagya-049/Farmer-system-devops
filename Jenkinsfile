@@ -30,7 +30,7 @@ pipeline {
 
                 ./sonar-scanner \
                 -Dsonar.projectKey=smart-farmer-devops \
-                -Dsonar.sources=backend \
+                -Dsonar.sources=/app/backend \
                 -Dsonar.host.url=http://sonarqube:9000 \
                 -Dsonar.login=$SONAR_TOKEN
                 "
