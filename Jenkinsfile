@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18'
+            args '-u root:root'
         }
     }
 
@@ -24,6 +25,7 @@ pipeline {
             steps {
                 dir('backend') {
                     sh '''
+                    npm install sonar-scanner --save-dev
                     npx sonar-scanner \
                     -Dsonar.projectKey=smart-farmer-devops \
                     -Dsonar.sources=. \
