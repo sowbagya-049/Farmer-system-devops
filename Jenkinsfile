@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        SONAR_HOST_URL = 'http://172.17.0.1:9000'
+        SONAR_HOST_URL = 'http://sonarqube:9000'
         SONAR_TOKEN = 'sqa_ece832660528dce776c0044005176210d58ab2f6'
     }
 
