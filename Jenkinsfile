@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        SONAR_HOST_URL = 'http://host.docker.internal:9000'
+        SONAR_HOST_URL = 'http://172.17.0.1:9000'
         SONAR_TOKEN = 'sqa_ece832660528dce776c0044005176210d58ab2f6'
     }
 
@@ -27,11 +27,13 @@ pipeline {
                     sh '''
                     apt update && apt install -y unzip wget
 
-                    wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+                    wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
 
-                    unzip sonar-scanner-cli-*.zip
+                    unzip -q sonar-scanner-cli-*.zip
 
                     cd sonar-scanner-*/bin
+
+                    chmod +x sonar-scanner
 
                     ./sonar-scanner \
                     -Dsonar.projectKey=smart-farmer-devops \
@@ -42,7 +44,5 @@ pipeline {
                 }
             }
         }
-
     }
 }
-
