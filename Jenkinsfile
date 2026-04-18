@@ -38,7 +38,7 @@ pipeline {
                 sonar-scanner \
                 -Dsonar.projectKey=smart-farmer-devops \
                 -Dsonar.sources=backend \
-                -Dsonar.host.url=http://host.docker.internal:9001 \
+                -Dsonar.host.url=http://devops-stack_sonarqube_1:9000 \
                 -Dsonar.login=$SONAR_TOKEN
                 '''
             }
