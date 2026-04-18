@@ -1,0 +1,65 @@
+- hosts: local
+  become: yes
+
+  vars:
+    user_name: "{{ lookup('env','USER') }}"
+    app_dir: "/home/{{ lookup('env','USER') }}/devops-stack"
+
+  tasks:
+
+    - name: Update apt safely
+      apt:
+        update_cache: yes
+      ignore_errors: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+          - curl
+          - rsync
+        state: present
+
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to docker group
+      user:
+        name: "{{ user_name }}"
+        groups: docker
+        append: yes
+
+    - name: Create project directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+
+    - name: Copy docker-compose file
+      copy:
+        src: ../docker-compose.yml
+        dest: "{{ app_dir }}/docker-compose.yml"
+
+    - name: Sync backend folder (fast)
+      synchronize:
+        src: ../backend/
+        dest: "{{ app_dir }}/backend/"
+        recursive: yes
+        rsync_opts:
+          - "--exclude=node_modules"
+
+    - name: Sync frontend folder (fast)
+      synchronize:
+        src: ../frontend/
+        dest: "{{ app_dir }}/frontend/"
+        recursive: yes
+
+    - name: Run Docker Compose (clean run)
+      shell: |
+        docker-compose down
+        docker-compose up -d --build
+      args:
+        chdir: "{{ app_dir }}"
